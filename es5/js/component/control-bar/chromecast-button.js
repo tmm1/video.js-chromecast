@@ -43,7 +43,9 @@ var ChromeCastButton = (function (_Button) {
         _classCallCheck(this, ChromeCastButton);
 
         _get(Object.getPrototypeOf(ChromeCastButton.prototype), 'constructor', this).call(this, player, options);
-        this.hide();
+        if (!ChromeCastButton.receiverAvailable) {
+            this.hide();
+        }
         this.initializeApi();
         options.appId = player.options_.chromecast.appId;
         player.chromecast = this;
@@ -140,6 +142,7 @@ var ChromeCastButton = (function (_Button) {
         key: 'receiverListener',
         value: function receiverListener(availability) {
             if (availability === 'available') {
+                ChromeCastButton.receiverAvailable = true;
                 return this.show();
             }
         }

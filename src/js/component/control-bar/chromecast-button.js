@@ -19,7 +19,9 @@ class ChromeCastButton extends Button {
 
     constructor (player, options) {
         super(player, options);
-        this.hide();
+        if (!ChromeCastButton.receiverAvailable) {
+          this.hide();
+        }
         this.initializeApi();
         options.appId = player.options_.chromecast.appId;
         player.chromecast = this;
@@ -110,6 +112,7 @@ class ChromeCastButton extends Button {
 
     receiverListener (availability) {
         if (availability === 'available') {
+            ChromeCastButton.receiverAvailable = true;
             return this.show();
         }
     }
