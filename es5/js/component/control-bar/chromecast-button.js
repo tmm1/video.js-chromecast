@@ -76,7 +76,8 @@ var ChromeCastButton = (function (_Button) {
             var appId = undefined;
             var sessionRequest = undefined;
 
-            var is_chrome = _videoJs2['default'].browser.IS_CHROME || /CriOS/i.test(_videoJs2['default'].browser.USER_AGENT);
+            var user_agent = window.navigator && window.navigator.userAgent || '';
+            var is_chrome = _videoJs2['default'].browser.IS_CHROME || /CriOS/i.test(user_agent);
             if (!is_chrome || _videoJs2['default'].browser.IS_EDGE) {
                 return;
             }
