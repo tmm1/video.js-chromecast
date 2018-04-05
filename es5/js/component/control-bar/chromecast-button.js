@@ -24,6 +24,7 @@ var _videoJs2 = _interopRequireDefault(_videoJs);
 var Component = _videoJs2['default'].getComponent('Component');
 var ControlBar = _videoJs2['default'].getComponent('ControlBar');
 var Button = _videoJs2['default'].getComponent('Button');
+var hasReceiver = false;
 
 /**
  * The base class for buttons that toggle chromecast video
@@ -43,9 +44,7 @@ var ChromeCastButton = (function (_Button) {
         _classCallCheck(this, ChromeCastButton);
 
         _get(Object.getPrototypeOf(ChromeCastButton.prototype), 'constructor', this).call(this, player, options);
-        if (!ChromeCastButton.receiverAvailable) {
-            this.hide();
-        }
+        this.hide();
         this.initializeApi();
         options.appId = player.options_.chromecast.appId;
         player.chromecast = this;
@@ -78,7 +77,7 @@ var ChromeCastButton = (function (_Button) {
 
             var user_agent = window.navigator && window.navigator.userAgent || '';
             var is_chrome = _videoJs2['default'].browser.IS_CHROME || /CriOS/i.test(user_agent);
-            if (!is_chrome || _videoJs2['default'].browser.IS_EDGE) {
+            if (!is_chrome || _videoJs2['default'].browser.IS_EDGE || typeof chrome === 'undefined') {
                 return;
             }
             if (!chrome.cast || !chrome.cast.isAvailable) {
@@ -129,6 +128,11 @@ var ChromeCastButton = (function (_Button) {
     }, {
         key: 'onInitSuccess',
         value: function onInitSuccess() {
+            if (hasReceiver) {
+                this.show();
+            } else {
+                this.hide();
+            }
             return this.apiInitialized = true;
         }
     }, {
@@ -144,8 +148,11 @@ var ChromeCastButton = (function (_Button) {
         key: 'receiverListener',
         value: function receiverListener(availability) {
             if (availability === 'available') {
-                ChromeCastButton.receiverAvailable = true;
+                hasReceiver = true;
                 return this.show();
+            } else {
+                hasReceiver = false;
+                return this.hide();
             }
         }
     }, {
