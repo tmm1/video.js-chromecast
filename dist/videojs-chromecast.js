@@ -67,6 +67,7 @@ var ChromeCastButton = (function (_Button) {
             if (_this.casting && _this.apiSession) {
                 _this.apiSession.stop(null, null);
             }
+            _this.disposed = true;
         });
     }
 
@@ -155,6 +156,7 @@ var ChromeCastButton = (function (_Button) {
     }, {
         key: 'receiverListener',
         value: function receiverListener(availability) {
+            if (this.disposed) return;
             if (availability === 'available') {
                 hasReceiver = true;
                 return this.show();
